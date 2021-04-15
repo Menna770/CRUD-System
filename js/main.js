@@ -14,7 +14,6 @@ var productName = document.getElementById("product-name"),
     productTable = [],
     currentIndex;
 
-    
 
 //Update Table After Refresh -- from storage:
 if (localStorage.length) {
@@ -26,7 +25,13 @@ if (localStorage.length) {
 //Add New Product Function:
 addBtn.onclick = function () {
 
-  if(productName.value == "" || productCategory.value == "" || productPrice.value == "" || productDescription.value == "") {
+  if(
+    productName.value == "" || 
+    productCategory.value == "" || 
+    productPrice.value == "" || 
+    productDescription.value == ""
+    ) {
+
     emptyAlert.innerHTML = "Please Fill In Required Info and Try Again!";
     displayTableHref.removeAttribute("href");
 
@@ -201,19 +206,20 @@ searchText.onkeyup = function () {
 
 // 1 -- Validate Product Name Function:
 function validateProductName() {
+
   var regex = /^[A-Z][a-z A-z 0-9]{2,}$/;
 
   if (regex.test(productName.value) == true) {
+  
+      productName.classList.add("is-valid");
+      productName.classList.remove("is-invalid");
 
-    productName.classList.add("is-valid");
-    productName.classList.remove("is-invalid");
+      PNameAlert.classList.add("d-none");
+      PNameAlert.classList.remove("d-block");
 
-    PNameAlert.classList.add("d-none");
-    PNameAlert.classList.remove("d-block");
+      addBtn.disabled = false;
 
-    addBtn.disabled = false;
-
-    return true;
+      return true; 
 
   } else {
     productName.classList.add("is-invalid");
@@ -228,7 +234,28 @@ function validateProductName() {
   }
 };
 
+//Check Duplicated Product Name
+function checkDuplicatedNames() {
+
+  for(var i = 0; i < productTable.length; i++)
+      {
+        if(productName.value == productTable[i].name) 
+        {
+          productName.classList.add("is-invalid");
+          productName.classList.remove("is-valid");
+
+          PNameAlert.classList.add("d-block");
+          PNameAlert.classList.remove("d-none");
+
+          PNameAlert.innerHTML = "Product Name Already Exists";
+
+          addBtn.disabled = true;
+        } 
+      }
+};
+
 productName.addEventListener("keyup", validateProductName);
+productName.addEventListener("blur", checkDuplicatedNames);
 
 
 // 2 -- Validate Product Category Function:

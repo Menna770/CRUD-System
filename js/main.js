@@ -16,10 +16,15 @@ var productName = document.getElementById("product-name"),
 
 
 //Update Table After Refresh -- from storage:
-if (localStorage.length) {
+if (localStorage.getItem("ProductsList") == null) {
+
+  productTable = [];
+
+} else {
+  
   productTable = JSON.parse(localStorage.getItem("ProductsList"));
   displayProduct();
-}
+};
 
 
 //Add New Product Function:
